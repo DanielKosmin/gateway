@@ -1,6 +1,5 @@
 package com.kosmin.integration.test;
 
-import com.kosmin.exception.PrimaryKeyNotFoundException;
 import com.kosmin.model.ForeignKeyMappingPayload;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -28,20 +27,19 @@ public class UpdateForeignKeyIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("test updating foreign key, invalid payload")
   public void testUpdateForeignKeyInvalid() {
-    var exc =
-        Assertions.assertThrows(
-            PrimaryKeyNotFoundException.class,
-            () ->
-                dataRelationService.updateTableRecords(
-                    ForeignKeyMappingPayload.builder()
-                        .checkingStartDate("2024-11-01")
-                        .checkingEndDate("2024-11-30")
-                        .checkingTransactionType("Debit")
-                        .checkingTransactionDescription("Credit Card Payment")
-                        .creditTransactionType("Sale")
-                        .build()));
+    var res =
+        dataRelationService.updateTableRecords(
+            ForeignKeyMappingPayload.builder()
+                .checkingStartDate("2024-11-01")
+                .checkingEndDate("2024-11-30")
+                .checkingTransactionType("Debit")
+                .checkingTransactionDescription("Credit Card Payment")
+                .creditTransactionType("Sale")
+                .build());
+    Assertions.assertNotNull(res);
+    Assertions.assertNotNull(res.getBody());
     Assertions.assertEquals(
-        exc.getMessage(),
+        res.getBody().getErrorMessage(),
         "Primary Key not found for payload combo: Checking Transaction Type: Debit; Checking Transaction Description: Credit Card Payment; Checking Start Date: 2024-11-01; Checking End Date: 2024-11-30");
   }
 }
