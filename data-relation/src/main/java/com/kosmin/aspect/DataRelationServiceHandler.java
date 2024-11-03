@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DataRelationServiceHandler {
 
-  @Around("execution(* com.kosmin.project.data_relation.service.DataRelationService.*(..))")
+  @Around("execution(* com.kosmin.service.DataRelationService.*(..))")
   public Object handleServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
     try {
       return joinPoint.proceed();
