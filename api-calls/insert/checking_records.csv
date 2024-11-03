@@ -1,0 +1,29 @@
+Account Number,Transaction Description,Transaction Date,Transaction Type,Transaction Amount,Balance
+0000,Deposit from Payroll,10/10/24,Credit,2938.91,4145.19
+0000,Money received,10/09/24,Credit,47,1206.28
+0000,Withdrawal from Credit Card Payment,10/09/24,Debit,500,1159.28
+0000,Money received,10/08/24,Credit,25,1659.28
+0000,Money received,10/07/24,Credit,5.05,1634.28
+0000,Money sent,10/07/24,Debit,45,1629.23
+0000,Money received,10/07/24,Credit,40.01,1674.23
+0000,Money sent,10/07/24,Debit,40,1634.22
+0000,Money received,10/07/24,Credit,40,1674.22
+0000,Check Deposit,10/07/24,Credit,100,1634.22
+0000,Cash Added,10/07/24,Credit,400,1534.22
+0000,Withdrawal from Utility Payment,10/07/24,Debit,64.97,1134.22
+0000,Money sent,10/06/24,Debit,20,1199.19
+0000,Money received,10/06/24,Credit,20,1219.19
+0000,Money sent,10/06/24,Debit,20,1199.19
+0000,Money received,10/06/24,Credit,20,1219.19
+0000,Withdrawal from Rent Payment,10/02/24,Debit,1364.92,1199.19
+0000,Withdrawal from Card Service Bill Payment,10/02/24,Debit,124.31,2564.11
+0000,Withdrawal from Credit Card Payment,10/02/24,Debit,2964.03,2688.42
+0000,Withdrawal from Credit Card Payment,10/02/24,Debit,606.88,5652.45
+0000,Withdrawal from Insurance Premium,10/02/24,Debit,55.17,6259.33
+0000,Withdrawal from Loan Payment,10/01/24,Debit,34.96,6314.5
+0000,Withdrawal from Gas Bill,10/01/24,Debit,56.66,6349.46
+0000,Withdrawal from Student Loan,10/01/24,Debit,178.13,6406.12
+0000,Monthly Interest Paid,09/30/24,Credit,0.38,6584.25
+0000,Deposit from Payroll,09/26/24,Credit,2623.27,6583.87
+0000,Withdrawal from Tax Payment,09/18/24,Debit,1000,3960.6
+0000,Deposit from Payroll,09/12/24,Credit,2623.26,4960.6

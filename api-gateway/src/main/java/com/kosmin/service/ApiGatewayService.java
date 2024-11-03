@@ -1,21 +1,25 @@
 package com.kosmin.service;
 
 import com.kosmin.model.Response;
-import com.kosmin.model.Status;
-// import com.kosmin.service.database.operations.DbOperationsService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class ApiGatewayService {
-  //  private final DbOperationsService dbOperationsService;
+  private final DataRelationService dataRelationService;
 
-  public ResponseEntity<Response> createTables() {
-    //    dbOperationsService.createTables();
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(Response.builder().status(Status.SUCCESS.getValue()).build());
+  public ResponseEntity<Response> createRecords(MultipartFile file) {
+    return Optional.ofNullable(file).isPresent()
+        ? dataRelationService.insertTableRecords(file)
+        : dataRelationService.createTables();
+  }
+
+  public ResponseEntity<Response> deleteRecords(
+      Boolean credit, Boolean checking, Boolean dropTables) {
+    return dataRelationService.deleteTableRecords(credit, checking, dropTables);
   }
 }
