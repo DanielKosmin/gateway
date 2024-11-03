@@ -4,6 +4,9 @@ plugins {
 }
 
 dependencies {
+  implementation project(':shared')
+  implementation project(':data-relation')
+
   // Spring dependencies
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter'

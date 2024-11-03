@@ -1,0 +1,55 @@
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <module name="TreeWalker">
+        <!-- Checks for whitespace after tokens -->
+        <module name="WhitespaceAfter"/>
+        <!-- Enforces a maximum length for methods -->
+        <module name="MethodLength">
+            <property name="max" value="100"/>
+        </module>
+        <!-- Enforces naming conventions for method parameters (lower camel case) -->
+        <module name="ParameterName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- Prohibits the use of wildcard imports -->
+        <module name="AvoidStarImport"/>
+        <!-- Flags empty catch blocks to encourage better error handling -->
+        <module name="EmptyCatchBlock"/>
+        <!-- Limits the complexity of methods -->
+        <module name="CyclomaticComplexity">
+            <property name="max" value="10"/>
+        </module>
+        <!-- Enforces naming conventions for types (upper camel case) -->
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- Enforces naming conventions for member variables (lower camel case) -->
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <!-- Enforces naming conventions for constants (uppercase with underscores) -->
+        <module name="ConstantName">
+            <property name="format" value="^[A-Z][A-Z0-9_]*$"/>
+        </module>
+        <!-- Limits the nesting of if statements -->
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <!-- Checks for missing @Override annotations on overridden methods -->
+        <module name="MissingOverride"/>
+        <!-- Enforces a maximum number of exceptions thrown by methods -->
+        <module name="ThrowsCount">
+            <property name="max" value="3"/>
+        </module>
+        <!-- Flags redundant modifiers in declarations -->
+        <module name="RedundantModifier"/>
+        <!-- Flags empty blocks (e.g., {} without content) -->
+        <module name="EmptyBlock"/>
+    </module>
+    <!-- Enforces a maximum length for files -->
+    <module name="FileLength">
+        <property name="max" value="200"/>
+    </module>
+</module>

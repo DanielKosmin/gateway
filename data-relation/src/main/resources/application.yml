@@ -1,0 +1,10 @@
+spring:
+  config:
+    import: queries.yml
+  profiles:
+    active: ${SPRING_PROFILE:local}
+  datasource:
+    url: ${POSTGRESQL_URL}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+    driver-class-name: org.postgresql.Driver

@@ -1,0 +1,2 @@
+### POST create tables
+POST {{GATEWAY_BASE_URL}}/gateway/v1
