@@ -1,0 +1,77 @@
+tables:
+  create-banking-table: |
+    CREATE TABLE checking_records (
+      banking_record_id       SERIAL PRIMARY KEY,
+      transaction_description VARCHAR(255)   NOT NULL,
+      transaction_date        DATE           NOT NULL,
+      transaction_type        VARCHAR(255)   NOT NULL,
+      transaction_amount      DECIMAL(10, 2) NOT NULL,
+      balance                 DECIMAL(10, 2) NOT NULL
+      );
+  create-credit-table: |
+    CREATE TABLE credit_records (
+      credit_record_id        SERIAL PRIMARY KEY,
+      banking_record_id       INTEGER,
+      transaction_date        DATE           NOT NULL,
+      transaction_description VARCHAR(255)   NOT NULL,
+      transaction_category    VARCHAR(255)   NOT NULL,
+      transaction_type        VARCHAR(255)   NOT NULL,
+      transaction_amount      DECIMAL(10, 2) NOT NULL,
+      FOREIGN KEY (banking_record_id) REFERENCES checking_records (banking_record_id)
+      );
+
+queries:
+  map:
+    insert-checking-records: |
+      INSERT INTO checking_records (transaction_description, transaction_date, transaction_type, 
+      transaction_amount, balance) 
+      VALUES(:transactionDescription, :transactionDate, :transactionType, :transactionAmount, :balance)
+
+    insert-credit-records: |
+      INSERT INTO credit_records (transaction_date, transaction_description, transaction_category, transaction_type, 
+      transaction_amount) 
+      VALUES(:transactionDate, :transactionDescription, :transactionCategory, :transactionType, :transactionAmount)
+
+    clear-checking-records: |
+      DELETE FROM checking_records
+
+    drop-checking-records: |
+      DROP TABLE IF EXISTS checking_records
+
+    clear-credit-records: |
+      DELETE FROM credit_records
+
+    drop-credit-records: |
+      DROP TABLE IF EXISTS credit_records
+
+    # get the primary key correlated to a banking transaction for a set of credit card transactions
+    query-primary-key: |
+      SELECT banking_record_id
+      FROM checking_records
+      WHERE upper(transaction_type) = upper(:checkingTransactionType)
+        AND transaction_date >= :checkingStartDate
+        AND transaction_date <= :checkingEndDate
+        AND upper(transaction_description) LIKE upper(:checkingTransactionDescription)
+      ORDER BY transaction_amount DESC
+      LIMIT 1
+
+    update-foreign-key: |
+      UPDATE credit_records
+      SET banking_record_id = :primaryKey
+      WHERE upper(transaction_type) = upper(:creditTransactionType)
+      AND transaction_date >= :creditStartDate
+      AND transaction_date <= :creditEndDate
+
+    # query all the credit card transactions associated with a checking account transaction
+    query-checking-transaction-relationship: |
+      SELECT
+          cr.transaction_date AS credit_transaction_date,
+          cr.transaction_date AS credit_transaction_description,
+          cr.transaction_category AS credit_transaction_category,
+          cr.transaction_amount AS credit_transaction_amount,
+          chr.transaction_amount AS total_card_balance,
+          chr.transaction_date AS card_balance_withdrawal_date
+      FROM credit_records cr INNER JOIN checking_records chr
+      ON cr.banking_record_id = chr.banking_record_id
+      WHERE transaction_date >= :joinStartDate
+      AND transaction_date >= :joinEndDate
