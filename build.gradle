@@ -36,4 +36,14 @@ subprojects {
 		toolVersion = '10.12.0' // Set Checkstyle version
 		configFile = file("$rootDir/shared/src/main/resources/checkstyle.xml")
 	}
+
+	test {
+		useJUnitPlatform()
+	}
+
+	tasks.register("unitTest", Test) {
+		useJUnitPlatform {
+			excludeTags "int"
+		}
+	}
 }
