@@ -9,6 +9,10 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter'
 
+  // module dependencies
+  implementation project(':shared')
+  testImplementation project(':api-gateway')
+
   // Lombok
   implementation 'org.projectlombok:lombok:1.18.34'
   annotationProcessor 'org.projectlombok:lombok:1.18.34'
@@ -31,7 +35,6 @@ dependencies {
 
   // Test dependencies
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
   testImplementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
   testImplementation 'jakarta.validation:jakarta.validation-api:3.1.0'
 }

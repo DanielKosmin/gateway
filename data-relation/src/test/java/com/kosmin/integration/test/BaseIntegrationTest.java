@@ -1,26 +1,22 @@
 package com.kosmin.integration.test;
 
+import com.kosmin.service.DataRelationService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient(timeout = "36000")
+@SpringBootTest(classes = com.kosmin.ApiGatewayApplication.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("int")
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
 
-  protected static final String COMMON_POST_URL = "table_queries/v1/insert";
-  protected static final String COMMON_PUT_URL = "table_queries/v1/update";
-  @Autowired protected WebTestClient webTestClient;
+  @Autowired protected DataRelationService dataRelationService;
 
   @BeforeAll
   void setUp(@Autowired JdbcTemplate jdbcTemplate) {
