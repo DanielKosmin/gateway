@@ -33,7 +33,10 @@ populate-db:
 		-H "Content-Type: multipart/form-data" \
 		-F "file=@api-calls/insert/checking_records.csv"
 
-	@echo "\nUploading credit CSV..."
+	@echo "\nAdding delay to allow async call to complete..."
+	@sleep 5
+
+	@echo "Uploading credit CSV..."
 	@curl -X POST $(DATA_RELATION_BASE_URL)/gateway/v1 \
 		-H "Content-Type: multipart/form-data" \
 		-F "file=@api-calls/insert/credit_records.csv"

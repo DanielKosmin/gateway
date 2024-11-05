@@ -54,24 +54,25 @@ public class DataRelationUtil {
     return null;
   }
 
-  public static String[] getPreviousMonthRange(String startDate, String endDate) {
+  public static String[] getNextMonthRange(java.util.Date transactionDate) {
+    // Convert java.util.Date to LocalDate using java.sql.Date
+    LocalDate localDate = new java.sql.Date(transactionDate.getTime()).toLocalDate();
+
+    // Calculate the first day of the next month
+    LocalDate firstDayOfNextMonth = localDate.plusMonths(1).withDayOfMonth(1);
+
+    // Calculate the last day of the next month
+    YearMonth yearMonth = YearMonth.from(firstDayOfNextMonth);
+    LocalDate lastDayOfNextMonth = yearMonth.atEndOfMonth();
+
+    // Define date formatter
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    // Parse the input start and end dates
-    LocalDate start = LocalDate.parse(startDate, formatter);
-    LocalDate end = LocalDate.parse(endDate, formatter);
+    // Format dates to strings
+    String startDate = firstDayOfNextMonth.format(formatter);
+    String endDate = lastDayOfNextMonth.format(formatter);
 
-    // Get the previous month from the start date
-    YearMonth previousMonth = YearMonth.from(start).minusMonths(1);
-
-    // Calculate the start and end of the previous month
-    LocalDate previousMonthStart = previousMonth.atDay(1);
-    LocalDate previousMonthEnd = previousMonth.atEndOfMonth();
-
-    // Format output dates as strings
-    String formattedStart = previousMonthStart.format(formatter);
-    String formattedEnd = previousMonthEnd.format(formatter);
-
-    return new String[] {formattedStart, formattedEnd};
+    // Return the interval as an array of strings
+    return new String[] {startDate, endDate};
   }
 }

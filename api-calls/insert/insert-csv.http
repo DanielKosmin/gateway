@@ -1,0 +1,17 @@
+### POST insert credit records
+POST {{GATEWAY_BASE_URL}}/gateway/v1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="credit_records.csv"
+
+< credit_records.csv
+
+### POST insert checking records
+POST {{GATEWAY_BASE_URL}}/gateway/v1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="checking_records.csv"
+
+< checking_records.csv

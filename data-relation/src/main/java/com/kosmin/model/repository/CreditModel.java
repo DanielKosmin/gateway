@@ -13,5 +13,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class CreditModel extends BaseRepositoryModel {
 
+  private int checkingRecordId;
   private String transactionCategory;
 }

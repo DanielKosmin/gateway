@@ -1,0 +1,27 @@
+### POST insert table records through payload
+POST {{GATEWAY_BASE_URL}}/gateway/v1
+Content-Type: application/json
+
+{
+  "creditRecords": [
+    {
+      "creditTransactionDescription": "test description",
+      "creditTransactionDate": "2024-10-05",
+      "creditTransactionType": "sale",
+      "creditTransactionCategory": "test",
+      "creditTransactionAmount": 200.00
+    },
+    {
+      "creditTransactionDescription": "test description",
+      "creditTransactionDate": "2024-10-05",
+      "creditTransactionType": "sale",
+      "creditTransactionCategory": "test",
+      "creditTransactionAmount": 200.00
+    }
+  ],
+  "checkingTransactionDescription": "withdrawal",
+  "checkingTransactionDate": "2024-11-06",
+  "checkingTransactionType": "credit",
+  "checkingTransactionAmount": 200.00,
+  "checkingBalance": 200.00
+}

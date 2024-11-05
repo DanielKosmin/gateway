@@ -4,6 +4,7 @@ import com.kosmin.model.repository.CheckingModel;
 import com.kosmin.model.repository.CreditModel;
 import com.kosmin.repository.insert.InsertCheckingRecords;
 import com.kosmin.repository.insert.InsertCreditRecords;
+import com.kosmin.repository.query.QueryPrimaryKey;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 public class InsertTest extends BaseUnitTest {
 
   @Mock private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+  @Mock private QueryPrimaryKey queryPrimaryKey;
   private InsertCheckingRecords insertCheckingRecords;
   private InsertCreditRecords insertCreditRecords;
   private String insertCheckingQuery;
@@ -30,7 +32,8 @@ public class InsertTest extends BaseUnitTest {
     insertCheckingQuery = sqlQueriesConfig.getMap().get(INSERT_CHECKING_RECORDS);
     insertCreditQuery = sqlQueriesConfig.getMap().get(INSERT_INTO_CREDIT_TABLE);
     insertCheckingRecords = new InsertCheckingRecords(namedParameterJdbcTemplate, sqlQueriesConfig);
-    insertCreditRecords = new InsertCreditRecords(namedParameterJdbcTemplate, sqlQueriesConfig);
+    insertCreditRecords =
+        new InsertCreditRecords(namedParameterJdbcTemplate, sqlQueriesConfig, queryPrimaryKey);
   }
 
   @Test
@@ -62,6 +65,7 @@ public class InsertTest extends BaseUnitTest {
   void insertRecordsIntoCreditTable() {
     CreditModel creditCardRecordsModel =
         CreditModel.builder()
+            .checkingRecordId(19)
             .transactionAmount(BigDecimal.valueOf(0.0))
             .transactionType("")
             .transactionCategory("")
@@ -69,11 +73,14 @@ public class InsertTest extends BaseUnitTest {
             .transactionDate(Date.valueOf("2024-10-10"))
             .build();
     final Map<String, Object> params = new HashMap<>();
+    params.put("foreignKey", creditCardRecordsModel.getCheckingRecordId());
     params.put("transactionDate", creditCardRecordsModel.getTransactionDate());
     params.put("transactionDescription", creditCardRecordsModel.getTransactionDescription());
     params.put("transactionCategory", creditCardRecordsModel.getTransactionCategory());
     params.put("transactionType", creditCardRecordsModel.getTransactionType());
     params.put("transactionAmount", creditCardRecordsModel.getTransactionAmount());
+    Mockito.when(queryPrimaryKey.queryPrimaryKey(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(19);
     Mockito.when(namedParameterJdbcTemplate.update(insertCreditQuery, params)).thenReturn(1);
     Assertions.assertDoesNotThrow(
         () -> insertCreditRecords.insertCreditRecords(creditCardRecordsModel));

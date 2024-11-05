@@ -6,14 +6,13 @@ import static com.kosmin.util.ResponseEntityUtil.badRequestResponse;
 import static com.kosmin.util.ResponseEntityUtil.createdResponse;
 
 import com.kosmin.exception.InvalidQueryParamException;
-import com.kosmin.model.ForeignKeyMappingPayload;
+import com.kosmin.model.Request;
 import com.kosmin.model.Response;
 import com.kosmin.service.async.service.AsyncCsvProcessingService;
 import com.kosmin.service.database.operations.DbOperationsService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +30,8 @@ public class DataRelationService {
     return createdResponse("Tables(s) Created Successfully");
   }
 
-  public ResponseEntity<Response> insertTableRecords(MultipartFile file) {
-    if (isValidCsvFile(file)) {
+  public ResponseEntity<Response> insertTableRecords(MultipartFile file, Request request) {
+    if (file != null && isValidCsvFile(file)) {
       asyncCsvProcessingService
           .handleCsvProcessing(file)
           .exceptionally(
@@ -41,6 +40,8 @@ public class DataRelationService {
                 return null;
               });
       return acceptedResponse("CSV File Successfully received and processing");
+    } else if (request != null) {
+      return createdResponse("Table Records inserted successfully");
     } else {
       return badRequestResponse(
           "Input must be a non empty csv file with filename including either "
@@ -60,10 +61,5 @@ public class DataRelationService {
     } else {
       throw new InvalidQueryParamException("Invalid Query Param Combo", credit, checking);
     }
-  }
-
-  public ResponseEntity<Response> updateTableRecords(ForeignKeyMappingPayload payload) {
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(dbOperationsService.updateForeignKeys(payload));
   }
 }

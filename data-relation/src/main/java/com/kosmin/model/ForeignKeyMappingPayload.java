@@ -1,6 +1,6 @@
 package com.kosmin.model;
 
-import com.kosmin.validator.DateValidator;
+import com.kosmin.validator.RequestValidator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@DateValidator
+@RequestValidator
 public class ForeignKeyMappingPayload {
 
   private String checkingStartDate;

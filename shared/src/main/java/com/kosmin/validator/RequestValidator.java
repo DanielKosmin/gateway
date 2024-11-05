@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DateValidatorImpl.class)
-public @interface DateValidator {
+@Constraint(validatedBy = RequestValidatorImpl.class)
+public @interface RequestValidator {
   String message() default "Invalid";
 
   Class<?>[] groups() default {};
