@@ -19,6 +19,8 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'com.diffplug.spotless'
 	apply plugin: 'checkstyle'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
 
 	java {
 		toolchain {
@@ -45,5 +47,23 @@ subprojects {
 		useJUnitPlatform {
 			excludeTags "int"
 		}
+	}
+
+	dependencies {
+		// Spring dependencies
+		implementation 'org.springframework.boot:spring-boot-starter'
+
+		// Lombok
+		implementation 'org.projectlombok:lombok:1.18.34'
+		annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+		// Jakarta Validator
+		implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+		implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+		implementation 'jakarta.el:jakarta.el-api:6.0.1'
+
+		// test dependencies
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
 	}
 }

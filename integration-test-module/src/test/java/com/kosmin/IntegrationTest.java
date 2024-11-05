@@ -2,15 +2,15 @@ package com.kosmin;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
-@SpringBootTest
 public class IntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("Test inserting records into checking table")
+  @Order(1)
   public void postCheckingTableRow() {
     MockMultipartFile multipartFile =
         new MockMultipartFile(
@@ -18,10 +18,9 @@ public class IntegrationTest extends BaseIntegrationTest {
             "checking_records.csv",
             String.valueOf(MediaType.MULTIPART_FORM_DATA),
             """
-            Account Number,Transaction Description,Transaction Date,Transaction Type,Transaction
-            Amount,Balance
-            0000,Deposit from payroll,10/10/24,Credit,500.00,1205.98
-            0000,Withdrawal from card,10/10/24,Debit,56.09,1358.08"""
+            Account Number,Transaction Description,Transaction Date,Transaction Type,Transaction Amount,Balance
+            0000,Deposit from Payroll,10/10/24,Credit,2938.91,4145.19
+            0000,Money received,10/09/24,Credit,47,1206.28"""
                 .getBytes());
     var res = dataRelationService.insertTableRecords(multipartFile, null);
     Assertions.assertNotNull(res);
@@ -32,6 +31,7 @@ public class IntegrationTest extends BaseIntegrationTest {
 
   @Test
   @DisplayName("Test inserting into credit table")
+  @Order(2)
   public void postCreditTableRow() {
     MockMultipartFile multipartFile =
         new MockMultipartFile(
@@ -40,7 +40,7 @@ public class IntegrationTest extends BaseIntegrationTest {
             String.valueOf(MediaType.MULTIPART_FORM_DATA),
             """
             Transaction Date,Post Date,Description,Category,Type,Amount
-            10/10/2024,10/11/2024,Eating Out,Food & Drink,Sale,-47.18"""
+            09/10/2024,10/11/2024,APPLE.COM/BILL,Shopping,Sale,-0.99"""
                 .getBytes());
     var res = dataRelationService.insertTableRecords(multipartFile, null);
     Assertions.assertNotNull(res);
