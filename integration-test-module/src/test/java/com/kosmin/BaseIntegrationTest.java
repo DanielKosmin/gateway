@@ -1,4 +1,4 @@
-package com.kosmin.integration.test;
+package com.kosmin;
 
 import com.kosmin.service.DataRelationService;
 import org.junit.jupiter.api.AfterAll;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = com.kosmin.ApiGatewayApplication.class)
+@SpringBootTest(classes = ApiGatewayApplication.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("int")
 @ActiveProfiles("test")
@@ -23,25 +23,26 @@ public abstract class BaseIntegrationTest {
     jdbcTemplate.execute("DROP TABLE IF EXISTS checking_records, credit_records");
     jdbcTemplate.execute(
         """
-        CREATE TABLE checking_records (
-              banking_record_id       SERIAL PRIMARY KEY,
-              transaction_description VARCHAR(255)   NOT NULL,
-              transaction_date        DATE           NOT NULL,
-              transaction_type        VARCHAR(255)   NOT NULL,
-              transaction_amount      DECIMAL(10, 2) NOT NULL,
-              balance                 DECIMAL(10, 2) NOT NULL
-              )""");
+          CREATE TABLE checking_records (
+          checking_record_id      SERIAL PRIMARY KEY,
+          transaction_description VARCHAR(255)   NOT NULL,
+          transaction_date        DATE           NOT NULL,
+          transaction_type        VARCHAR(255)   NOT NULL,
+          transaction_amount      DECIMAL(10, 2) NOT NULL,
+          balance                 DECIMAL(10, 2) NOT NULL
+            )""");
     jdbcTemplate.execute(
         """
-        CREATE TABLE credit_records (
-              credit_record_id        SERIAL PRIMARY KEY,
-              banking_record_id       INTEGER,
-              transaction_date        DATE           NOT NULL,
-              transaction_description VARCHAR(255)   NOT NULL,
-              transaction_category    VARCHAR(255)   NOT NULL,
-              transaction_type        VARCHAR(255)   NOT NULL,
-              transaction_amount      DECIMAL(10, 2) NOT NULL,
-              FOREIGN KEY (banking_record_id) REFERENCES checking_records (banking_record_id)
+          CREATE TABLE credit_records (
+            credit_record_id        SERIAL PRIMARY KEY,
+            checking_record_id      INTEGER        NOT NULL,
+            transaction_date        DATE           NOT NULL,
+            transaction_description VARCHAR(255)   NOT NULL,
+            transaction_category    VARCHAR(255)   NOT NULL,
+            transaction_type        VARCHAR(255)   NOT NULL,
+            transaction_amount      DECIMAL(10, 2) NOT NULL,
+            FOREIGN KEY (checking_record_id) REFERENCES checking_records (checking_record_id)
+            ON DELETE CASCADE
               )""");
     jdbcTemplate.execute(
         """
@@ -50,8 +51,8 @@ public abstract class BaseIntegrationTest {
           \s""");
     jdbcTemplate.execute(
         """
-          INSERT INTO credit_records (transaction_date, transaction_description, transaction_category, transaction_type, transaction_amount)\s
-          VALUES('2024-09-28', 'BAKERY', 'Food & Drink', 'Sale', '-25.00')""");
+          INSERT INTO credit_records (checking_record_id, transaction_date, transaction_description, transaction_category, transaction_type, transaction_amount)\s
+          VALUES(1, '2024-09-28', 'BAKERY', 'Food & Drink', 'Sale', '-25.00')""");
   }
 
   @AfterAll

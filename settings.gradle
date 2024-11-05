@@ -1,3 +1,3 @@
 rootProject.name = 'gateway'
-include 'api-gateway', 'data-relation', 'shared'
+include 'api-gateway', 'data-relation', 'shared', 'integration-test-module'
 

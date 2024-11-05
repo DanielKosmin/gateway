@@ -22,8 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class ApiGatewayController {
   private final ApiGatewayService apiGatewayService;
 
+  @PostMapping
+  public ResponseEntity<Response> create() {
+    return apiGatewayService.createTables();
+  }
+
   @PostMapping(consumes = "multipart/form-data")
-  public ResponseEntity<Response> postFile(@RequestParam("file") MultipartFile file) {
+  public ResponseEntity<Response> postFile(
+      @RequestParam(value = "file", required = false) MultipartFile file) {
     return apiGatewayService.bulkUploadRecords(file);
   }
 
