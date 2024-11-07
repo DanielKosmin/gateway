@@ -41,7 +41,7 @@ public class DataRelationUtil {
   }
 
   public static Date parseTransactionDate(String dateString) {
-    final String[] formats = {"MM/dd/yy", "MM/dd/yyyy"};
+    final String[] formats = {"MM/dd/yy", "MM/dd/yyyy", "yyyy-MM-dd"};
     for (String format : formats) {
       try {
         final SimpleDateFormat sdf = new SimpleDateFormat(format);

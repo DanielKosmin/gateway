@@ -19,4 +19,5 @@ public class Response {
   private String message;
   private String errorMessage;
   private List<String> validationErrors;
+  private List<Request.CreditRecordPayload> failedCreditInsertions;
 }

@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class DataRelationServiceHandler {
+public class GatewayServiceHandler {
 
-  @Around("execution(* com.kosmin.service.DataRelationService.*(..))")
+  @Around("execution(* com.kosmin.service.ApiGatewayService.*(..))")
   public Object handleServiceMethod(ProceedingJoinPoint joinPoint) throws Throwable {
     try {
       return joinPoint.proceed();
@@ -31,15 +31,10 @@ public class DataRelationServiceHandler {
 
   private ResponseEntity<Response> handleException(Exception e) {
     log.error(e.getMessage());
-    // trying to create tables when they already exist
-    if (e instanceof BadSqlGrammarException
-        && e.getCause().getMessage().toLowerCase().contains("already exists")) {
+    if (duplicateTableCreation(e)) {
       return badRequestResponse(e.getCause().getMessage());
     }
-    if (e instanceof RuntimeException
-        && e.getMessage()
-            .equalsIgnoreCase(
-                "Driver org.postgresql.Driver claims to not accept jdbcUrl, ${POSTGRESQL_URL}")) {
+    if (connectionStringsNotSetup(e)) {
       return internalServerErrorResponse(
           "DB Connection Strings not setup correctly for Table Creation");
     }
@@ -47,5 +42,17 @@ public class DataRelationServiceHandler {
       return badRequestResponse(e.getMessage());
     }
     return internalServerErrorResponse(e.getMessage());
+  }
+
+  private boolean duplicateTableCreation(Exception e) {
+    return e instanceof BadSqlGrammarException
+        && e.getCause().getMessage().toLowerCase().contains("already exists");
+  }
+
+  private boolean connectionStringsNotSetup(Exception e) {
+    return e instanceof RuntimeException
+        && e.getMessage()
+            .equalsIgnoreCase(
+                "Driver org.postgresql.Driver claims to not accept jdbcUrl, ${POSTGRESQL_URL}");
   }
 }

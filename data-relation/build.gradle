@@ -9,10 +9,6 @@ dependencies {
 
   // CSV processing
   implementation 'com.opencsv:opencsv:5.9'
-
-  // Aspect
-  implementation 'org.springframework.boot:spring-boot-starter-aop'
-  implementation 'org.aspectj:aspectjweaver'
 }
 
 tasks.bootJar {

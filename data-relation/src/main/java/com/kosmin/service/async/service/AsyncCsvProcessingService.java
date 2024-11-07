@@ -66,7 +66,7 @@ public class AsyncCsvProcessingService {
       switch (type) {
         case CHECKING ->
             insertCheckingRecords.insertCheckingRecords(
-                buildCheckingDbModel(csvModel, formattedDate));
+                buildCheckingDbModel(csvModel, formattedDate), false);
         case CREDIT ->
             insertCreditRecords.insertCreditRecords(buildCreditDbModel(csvModel, formattedDate));
       }

@@ -5,4 +5,7 @@ dependencies {
   // Aspect
   implementation 'org.springframework.boot:spring-boot-starter-aop'
   implementation 'org.aspectj:aspectjweaver'
+
+  // Give access to SQL exceptions from JDBC template
+  implementation 'org.springframework:spring-jdbc'
 }

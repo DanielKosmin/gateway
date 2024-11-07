@@ -1,16 +1,21 @@
 package com.kosmin.service;
 
 import static com.kosmin.util.DataRelationUtil.isValidCsvFile;
+import static com.kosmin.util.DbModelBuilderUtil.buildCheckingDbModel;
 import static com.kosmin.util.ResponseEntityUtil.acceptedResponse;
 import static com.kosmin.util.ResponseEntityUtil.badRequestResponse;
 import static com.kosmin.util.ResponseEntityUtil.createdResponse;
+import static com.kosmin.util.ResponseEntityUtil.partiallyCompletedResponse;
 
 import com.kosmin.exception.InvalidQueryParamException;
 import com.kosmin.model.Request;
 import com.kosmin.model.Response;
 import com.kosmin.repository.create.CreateTables;
 import com.kosmin.repository.delete.DeleteTableRows;
+import com.kosmin.repository.insert.InsertCheckingRecords;
+import com.kosmin.repository.insert.InsertCreditRecords;
 import com.kosmin.service.async.service.AsyncCsvProcessingService;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,8 @@ public class DataRelationService {
   private final AsyncCsvProcessingService asyncCsvProcessingService;
   private final CreateTables createTables;
   private final DeleteTableRows deleteTableRows;
+  private final InsertCheckingRecords insertCheckingRecords;
+  private final InsertCreditRecords insertCreditRecords;
 
   public ResponseEntity<Response> createTables() {
     createTables.createTables();
@@ -43,7 +50,12 @@ public class DataRelationService {
               });
       return acceptedResponse("CSV File Successfully received and processing");
     } else if (request != null) {
-      return createdResponse("Table Records inserted successfully");
+      insertCheckingRecords.insertCheckingRecords(buildCheckingDbModel(request), true);
+      List<Request.CreditRecordPayload> creditInsertions =
+          insertCreditRecords.insertCreditRecords(request);
+      return creditInsertions.isEmpty()
+          ? createdResponse("Table Records inserted successfully")
+          : partiallyCompletedResponse("Tables Insertions partially completed", creditInsertions);
     } else {
       return badRequestResponse(
           "Input must be a non empty csv file with filename including either "
