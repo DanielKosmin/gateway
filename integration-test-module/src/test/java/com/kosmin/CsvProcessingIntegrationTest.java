@@ -19,7 +19,7 @@ public class CsvProcessingIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("Test inserting records into checking table")
   @Order(1)
-  public void postCheckingTableRow() {
+  void postCheckingTableRow() {
     String csvContent =
         """
     Account Number,Transaction Description,Transaction Date,Transaction Type,Transaction Amount,Balance
@@ -34,7 +34,7 @@ public class CsvProcessingIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("Test inserting into credit table")
   @Order(2)
-  public void postCreditTableRow() {
+  void postCreditTableRow() {
     String csvContent =
         """
     Transaction Date,Post Date,Description,Category,Type,Amount
@@ -48,7 +48,7 @@ public class CsvProcessingIntegrationTest extends BaseIntegrationTest {
   @Test
   @DisplayName("Test inserting into credit table with no parent key found")
   @Order(3)
-  public void postCreditTableRowInvalid() {
+  void postCreditTableRowInvalid() {
     MockMultipartFile multipartFile =
         new MockMultipartFile(
             "file",
