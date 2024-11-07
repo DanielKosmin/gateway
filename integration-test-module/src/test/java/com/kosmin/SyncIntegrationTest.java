@@ -40,13 +40,46 @@ public class SyncIntegrationTest extends BaseIntegrationTest {
                 .checkingTransactionType("credit")
                 .checkingTransactionAmount(200.00)
                 .checkingBalance(200.00)
-                .build());
+                .build(),
+            HttpStatus.CREATED);
     Assertions.assertNotNull(response);
     Assertions.assertEquals(response.getMessage(), "Table Records inserted successfully");
     Assertions.assertEquals(response.getStatus(), "Success");
   }
 
-  private Response postRequest(Object body) {
+  @Test
+  @DisplayName("Synchronously insert table records invalid paylod")
+  @Order(2)
+  void insertRecordsInvalidPaylod() {
+    Response response =
+        postRequest(
+            Request.builder()
+                .creditRecords(
+                    List.of(
+                        Request.CreditRecordPayload.builder()
+                            .creditTransactionDate("2024-10-05")
+                            .creditTransactionType("sale")
+                            .creditTransactionCategory("test")
+                            .creditTransactionAmount(200.00)
+                            .build(),
+                        Request.CreditRecordPayload.builder()
+                            .creditTransactionDate("2024-10-05")
+                            .creditTransactionType("sale")
+                            .creditTransactionCategory("test")
+                            .creditTransactionAmount(200.00)
+                            .build()))
+                .checkingTransactionDescription("withdrawal")
+                .checkingTransactionDate("2024-11-06")
+                .checkingTransactionAmount(200.00)
+                .checkingBalance(200.00)
+                .build(),
+            HttpStatus.BAD_REQUEST);
+    Assertions.assertNotNull(response);
+    Assertions.assertEquals(response.getValidationErrors().size(), 3);
+    Assertions.assertEquals(response.getStatus(), "Failed");
+  }
+
+  private Response postRequest(Object body, HttpStatus status) {
     return webTestClient
         .post()
         .uri(BaseIntegrationTest.POST_URL)
@@ -54,7 +87,7 @@ public class SyncIntegrationTest extends BaseIntegrationTest {
         .bodyValue(body)
         .exchange()
         .expectStatus()
-        .isEqualTo(HttpStatus.CREATED)
+        .isEqualTo(status)
         .expectBody(Response.class)
         .returnResult()
         .getResponseBody();
