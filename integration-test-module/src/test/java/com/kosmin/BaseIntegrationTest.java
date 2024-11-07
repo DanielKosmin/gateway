@@ -1,6 +1,6 @@
 package com.kosmin;
 
-import com.kosmin.service.DataRelationService;
+import com.kosmin.service.async.service.AsyncCsvProcessingService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -8,18 +8,25 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
-@SpringBootTest(classes = ApiGatewayApplication.class)
+@SpringBootTest(
+    classes = ApiGatewayApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("int")
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@AutoConfigureWebTestClient(timeout = "36000")
 public abstract class BaseIntegrationTest {
 
-  @Autowired protected DataRelationService dataRelationService;
+  protected static final String POST_URL = "gateway/v1";
+  @Autowired protected AsyncCsvProcessingService asyncCsvProcessingService;
+  @Autowired protected WebTestClient webTestClient;
 
   @BeforeAll
   void setUp(@Autowired JdbcTemplate jdbcTemplate) {

@@ -8,7 +8,8 @@ import static com.kosmin.util.DbModelBuilderUtil.buildCreditDbModel;
 import com.kosmin.exception.AsyncProcessingException;
 import com.kosmin.model.CsvModel;
 import com.kosmin.model.Type;
-import com.kosmin.service.database.operations.DbOperationsService;
+import com.kosmin.repository.insert.InsertCheckingRecords;
+import com.kosmin.repository.insert.InsertCreditRecords;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.BufferedReader;
@@ -24,7 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 public class AsyncCsvProcessingService {
-  private final DbOperationsService dbOperationsService;
+  private final InsertCheckingRecords insertCheckingRecords;
+  private final InsertCreditRecords insertCreditRecords;
 
   public CompletableFuture<Void> handleCsvProcessing(MultipartFile file) {
     return CompletableFuture.runAsync(
@@ -63,11 +65,10 @@ public class AsyncCsvProcessingService {
     if (validInsertModel) {
       switch (type) {
         case CHECKING ->
-            dbOperationsService.insertCheckingInformation(
+            insertCheckingRecords.insertCheckingRecords(
                 buildCheckingDbModel(csvModel, formattedDate));
         case CREDIT ->
-            dbOperationsService.insertCreditInformation(
-                buildCreditDbModel(csvModel, formattedDate));
+            insertCreditRecords.insertCreditRecords(buildCreditDbModel(csvModel, formattedDate));
       }
     } else {
       log.error(

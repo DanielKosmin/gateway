@@ -8,8 +8,9 @@ import static com.kosmin.util.ResponseEntityUtil.createdResponse;
 import com.kosmin.exception.InvalidQueryParamException;
 import com.kosmin.model.Request;
 import com.kosmin.model.Response;
+import com.kosmin.repository.create.CreateTables;
+import com.kosmin.repository.delete.DeleteTableRows;
 import com.kosmin.service.async.service.AsyncCsvProcessingService;
-import com.kosmin.service.database.operations.DbOperationsService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class DataRelationService {
 
   private final AsyncCsvProcessingService asyncCsvProcessingService;
-  private final DbOperationsService dbOperationsService;
+  private final CreateTables createTables;
+  private final DeleteTableRows deleteTableRows;
 
   public ResponseEntity<Response> createTables() {
-    dbOperationsService.createTables();
+    createTables.createTables();
     return createdResponse("Tables(s) Created Successfully");
   }
 
@@ -55,8 +57,7 @@ public class DataRelationService {
     boolean clearCheckingTable = Optional.ofNullable(checking).orElse(false);
     boolean isDropTablesRequest = Optional.ofNullable(dropTables).orElse(false);
     if (clearCreditTable || clearCheckingTable) {
-      dbOperationsService.clearTablesRecords(
-          clearCreditTable, clearCheckingTable, isDropTablesRequest);
+      deleteTableRows.clearTableRows(clearCreditTable, clearCheckingTable, isDropTablesRequest);
       return ResponseEntity.noContent().build();
     } else {
       throw new InvalidQueryParamException("Invalid Query Param Combo", credit, checking);
