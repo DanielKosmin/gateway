@@ -1,11 +1,16 @@
 package com.kosmin.repository.insert;
 
+import static com.kosmin.util.DbModelBuilderUtil.buildCreditDbModel;
+
 import com.kosmin.config.SqlQueriesConfig;
+import com.kosmin.model.Request;
 import com.kosmin.model.repository.CreditModel;
 import com.kosmin.repository.query.QueryPrimaryKey;
 import com.kosmin.util.DataRelationUtil;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,19 @@ public class InsertCreditRecords {
         jdbcTemplate.update(
             sqlQueriesConfig.getMap().get("insert-credit-records"), getQueryMappings(creditModel));
     if (insertionResponse != 1) log.error("Insert credit Records Failed for {}", creditModel);
+  }
+
+  public List<Request.CreditRecordPayload> insertCreditRecords(Request request) {
+    List<Request.CreditRecordPayload> failedInsertions = new ArrayList<>();
+    List<Request.CreditRecordPayload> creditRecords = request.getCreditRecords();
+    for (Request.CreditRecordPayload currRecord : creditRecords) {
+      int insertionResponse =
+          jdbcTemplate.update(
+              sqlQueriesConfig.getMap().get("insert-credit-records"),
+              getQueryMappings(buildCreditDbModel(currRecord)));
+      if (insertionResponse != 1) failedInsertions.add(currRecord);
+    }
+    return failedInsertions;
   }
 
   private Map<String, Object> getQueryMappings(CreditModel creditModel) {

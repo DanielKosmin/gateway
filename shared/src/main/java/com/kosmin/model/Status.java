@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public enum Status {
   SUCCESS("Success"),
-  FAILED("Failed");
+  FAILED("Failed"),
+  PARTIALLY_COMPLETED("Partially Completed"),
+  ;
 
   private final String value;
 

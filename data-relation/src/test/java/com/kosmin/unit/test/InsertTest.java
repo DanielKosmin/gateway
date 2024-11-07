@@ -55,7 +55,7 @@ public class InsertTest extends BaseUnitTest {
     params.put("balance", bankingAccountModel.getBalance());
     Mockito.when(namedParameterJdbcTemplate.update(insertCheckingQuery, params)).thenReturn(1);
     Assertions.assertDoesNotThrow(
-        () -> insertCheckingRecords.insertCheckingRecords(bankingAccountModel));
+        () -> insertCheckingRecords.insertCheckingRecords(bankingAccountModel, false));
     Mockito.verify(namedParameterJdbcTemplate, Mockito.times(1))
         .update(insertCheckingQuery, params);
   }
