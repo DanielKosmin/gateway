@@ -47,14 +47,6 @@ make init
 make clean
 ```
 
-### Generate JWT Secret
-
-- secret key is for signing and verifying JWTs, doesn't control contents of the actual token but ensures verification
-
-```bash
-openssl rand -base64 32
-```
-
 ### Learnings
 
 #### Pros of using a multi-level gradle project over splitting into multiple microservices

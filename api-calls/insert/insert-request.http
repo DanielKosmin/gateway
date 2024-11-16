@@ -1,6 +1,7 @@
 ### POST insert table records through payload
 POST {{GATEWAY_BASE_URL}}/gateway/v1
 Content-Type: application/json
+Authorization: Bearer {{TOKEN_VALUE}}
 
 {
   "creditRecords": [
