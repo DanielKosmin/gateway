@@ -1,9 +1,9 @@
-.PHONY: init start-database run-app populate-db clean wait-for-app update-jwt-key
+.PHONY: init update-jwt-key start-database kill-existing-port run-app fill-tables clean-port clean
 
 DATA_RELATION_BASE_URL ?= http://localhost:8080
 YML_FILE ?= api-gateway/src/main/resources/application-local.yml
 
-init: start-database run-app drop-existing-tables create-tables populate-db
+init: start-database kill-existing-port run-app fill-tables clean-port
 
 update-jwt-key:
 	@echo "Generating JWT Secret"
@@ -13,52 +13,52 @@ update-jwt-key:
 	echo "JWT secret updated successfully in $(YML_FILE)"
 
 start-database:
-	@echo "Starting Docker Compose for PostgreSQL..."
+	@echo "Starting Docker Compose for Postgres DB..."
 	@docker-compose up -d > /dev/null 2>&1
 
-run-app:
-	@echo "Building and starting the application..."
-	@./gradlew clean bootRun > /dev/null 2>&1 & APP_PID=$$! && echo $$! > app.pid
-
-drop-existing-tables: wait-for-app
-	@/bin/echo -n "Dropping existing Database Records..."
-	@OUTPUT=$$(curl -s -X DELETE "$(DATA_RELATION_BASE_URL)/gateway/v1?credit=true&checking=true&dropTables=true"); \
-	echo "$$OUTPUT"; \
-	if echo "$$OUTPUT" | grep -q "DB Connection Strings not setup correctly"; then \
-		echo "Exiting Makefile due to error: $$OUTPUT"; \
-		kill `cat app.pid` || true; \
-		rm -f app.pid; \
-		exit 1; \
+kill-existing-port:
+	@echo "Cleaning port 8080..."
+	@PID=$(shell lsof -t -i:8080); \
+	if [ -n "$$PID" ]; then \
+		kill -9 $$PID; \
 	fi
 
-create-tables:
-	@echo "Creating the database tables..."
-	@curl -s -X POST $(DATA_RELATION_BASE_URL)/gateway/v1
+run-app:
+	@echo "Building and starting application..."
+	@./gradlew clean bootRun > /dev/null 2>&1 &
 
-populate-db:
-	@echo "\nUploading banking CSV..."
-	@curl -X POST $(DATA_RELATION_BASE_URL)/gateway/v1 \
-		-H "Content-Type: multipart/form-data" \
-		-F "file=@api-calls/insert/checking_records.csv"
-
-	@echo "\nAdding delay to allow async call to complete..."
+fill-tables:
 	@sleep 5
+	@echo "Generating auth token..."
+	@TOKEN=$$(curl -s -X POST "$(DATA_RELATION_BASE_URL)/api/auth/login?username=admin&password=admin"); \
+	echo "Dropping Existing Tables..."; \
+	DELETE_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X DELETE "$(DATA_RELATION_BASE_URL)/gateway/v1?credit=true&checking=true&dropTables=true" \
+					-H "Authorization: Bearer $$TOKEN"); \
+	echo "Response Code: $$DELETE_RES"; \
+	echo "Creating New Tables..."; \
+	CREATE_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X POST "$(DATA_RELATION_BASE_URL)/gateway/v1" \
+               		-H "Authorization: Bearer $$TOKEN"); \
+    echo "Response Code: $$CREATE_RES"; \
+    echo "Uploading Checking Data..."; \
+    CHECKING_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X POST "$(DATA_RELATION_BASE_URL)/gateway/v1" \
+					-H "Authorization: Bearer $$TOKEN" \
+					-F "file=@api-calls/insert/checking_records.csv"); \
+	echo "Response Code: $$CHECKING_RES"; \
+	echo "Adding pause to allow async call to complete..."; \
+	sleep 2; \
+	echo "Uploading Credit Data..."; \
+	CREDIT_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X POST "$(DATA_RELATION_BASE_URL)/gateway/v1" \
+					-H "Authorization: Bearer $$TOKEN" \
+					-F "file=@api-calls/insert/credit_records.csv"); \
+	echo "Response Code: $$CREDIT_RES"; \
+	echo "Data population complete. Shutting down the application..."
 
-	@echo "Uploading credit CSV..."
-	@curl -X POST $(DATA_RELATION_BASE_URL)/gateway/v1 \
-		-H "Content-Type: multipart/form-data" \
-		-F "file=@api-calls/insert/credit_records.csv"
-
-	@echo "\nData population complete. Shutting down the application..."
-	@kill `cat app.pid`
-	@rm app.pid
-
-wait-for-app:
-	@echo "Waiting for the application to be ready..."
-	@until curl -s $(DATA_RELATION_BASE_URL)/actuator/health | grep 'OK' > /dev/null; do \
-		echo "Waiting..."; \
-		sleep 2; \
-	done
+clean-port:
+	@echo "Cleaning port 8080..."
+	@PID=$(shell lsof -t -i:8080); \
+	if [ -n "$$PID" ]; then \
+		kill -9 $$PID; \
+	fi
 
 clean:
 	@echo "\nKilling all docker containers..."

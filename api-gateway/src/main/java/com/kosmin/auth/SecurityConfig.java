@@ -24,7 +24,7 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/auth/login")
+                auth.requestMatchers("/api/auth/login", "/actuator/health")
                     .permitAll()
                     .anyRequest()
                     .authenticated() // all other requests outside token generation requires auth
