@@ -15,8 +15,14 @@ microservice.
 ### Local Setup
 
 - Ensure docker is installed and the docker daemon is running
-- in the [resources](api-gateway/src/main/resources) directory, create a file called `application-local.yml` and paste
-  the following contents
+- in the [resources](api-gateway/src/main/resources) directory, create a file called `application-local.yml`
+- add `spring.auth.jwt.key:` to the file and run the below command to generate a jwt secret
+
+```bash
+make update-jwt-key
+```
+
+- additionally, add the following remaining configurations
 
 ```bash
 spring:
@@ -39,6 +45,14 @@ make init
 
 ```bash
 make clean
+```
+
+### Generate JWT Secret
+
+- secret key is for signing and verifying JWTs, doesn't control contents of the actual token but ensures verification
+
+```bash
+openssl rand -base64 32
 ```
 
 ### Learnings

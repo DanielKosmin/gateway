@@ -1,4 +1,7 @@
 spring:
+  auth:
+    jwt:
+      key: ${JWT_SECRET}
   config:
     import: queries.yml
   profiles:

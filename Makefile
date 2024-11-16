@@ -1,8 +1,16 @@
-.PHONY: init start-database run-app populate-db clean wait-for-app
+.PHONY: init start-database run-app populate-db clean wait-for-app update-jwt-key
 
 DATA_RELATION_BASE_URL ?= http://localhost:8080
+YML_FILE ?= api-gateway/src/main/resources/application-local.yml
 
 init: start-database run-app drop-existing-tables create-tables populate-db
+
+update-jwt-key:
+	@echo "Generating JWT Secret"
+	@NEW_KEY=$$(openssl rand -base64 32) && \
+	ESCAPED_NEW_KEY=$$(printf '%s' "$${NEW_KEY}" | sed 's/[&/\]/\\&/g') && \
+	sed -i '' "s/^spring\.auth\.jwt\.key:.*/spring.auth.jwt.key: $$ESCAPED_NEW_KEY/" $(YML_FILE) && \
+	echo "JWT secret updated successfully in $(YML_FILE)"
 
 start-database:
 	@echo "Starting Docker Compose for PostgreSQL..."
