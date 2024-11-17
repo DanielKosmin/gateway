@@ -25,11 +25,20 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 public abstract class BaseIntegrationTest {
 
   protected static final String POST_URL = "gateway/v1";
+  protected static String TOKEN = "";
   @Autowired protected AsyncCsvProcessingService asyncCsvProcessingService;
   @Autowired protected WebTestClient webTestClient;
 
   @BeforeAll
-  void setUp(@Autowired JdbcTemplate jdbcTemplate) {
+  void setUp(@Autowired JdbcTemplate jdbcTemplate, @Autowired WebTestClient webTestClient) {
+    TOKEN =
+        webTestClient
+            .post()
+            .uri("api/auth/login?username=admin&password=admin")
+            .exchange()
+            .expectBody(String.class)
+            .returnResult()
+            .getResponseBody();
     jdbcTemplate.execute("DROP TABLE IF EXISTS checking_records, credit_records");
     jdbcTemplate.execute(
         """

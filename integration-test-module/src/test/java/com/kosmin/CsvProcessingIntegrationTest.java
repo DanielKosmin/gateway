@@ -91,6 +91,7 @@ public class CsvProcessingIntegrationTest extends BaseIntegrationTest {
     return webTestClient
         .post()
         .uri(BaseIntegrationTest.POST_URL)
+        .header("Authorization", "Bearer " + TOKEN)
         .contentType(MediaType.MULTIPART_FORM_DATA)
         .bodyValue(body)
         .exchange()
