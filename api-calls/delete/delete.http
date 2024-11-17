@@ -1,3 +1,4 @@
 ### DELETE Tables
 DELETE {{GATEWAY_BASE_URL}}/gateway/v1?credit=true&checking=true&dropTables=true
 Authorization: Bearer {{TOKEN_VALUE}}
+x-api-key: {{API_KEY}}

@@ -1,3 +1,4 @@
 ### POST create tables
 POST {{GATEWAY_BASE_URL}}/gateway/v1
 Authorization: Bearer {{TOKEN_VALUE}}
+x-api-key: {{API_KEY}}

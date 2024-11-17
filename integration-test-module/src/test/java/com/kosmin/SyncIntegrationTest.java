@@ -84,6 +84,7 @@ public class SyncIntegrationTest extends BaseIntegrationTest {
         .post()
         .uri(BaseIntegrationTest.POST_URL)
         .header("Authorization", "Bearer " + TOKEN)
+        .header("x-api-key", "default")
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(body)
         .exchange()

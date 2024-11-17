@@ -92,6 +92,7 @@ public class CsvProcessingIntegrationTest extends BaseIntegrationTest {
         .post()
         .uri(BaseIntegrationTest.POST_URL)
         .header("Authorization", "Bearer " + TOKEN)
+        .header("x-api-key", "default")
         .contentType(MediaType.MULTIPART_FORM_DATA)
         .bodyValue(body)
         .exchange()
