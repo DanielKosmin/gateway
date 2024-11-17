@@ -2,7 +2,7 @@ spring:
   auth:
     skip: false
     jwt:
-      key: ${JWT_SECRET}
+      key: ${JWT_SECRET:default}
   config:
     import: queries.yml
   profiles:
