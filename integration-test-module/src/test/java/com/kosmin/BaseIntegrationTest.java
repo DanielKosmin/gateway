@@ -1,5 +1,6 @@
 package com.kosmin;
 
+import com.kosmin.model.AuthRequest;
 import com.kosmin.service.async.service.AsyncCsvProcessingService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,7 +35,8 @@ public abstract class BaseIntegrationTest {
     TOKEN =
         webTestClient
             .post()
-            .uri("api/auth/login?username=admin&password=admin")
+            .uri("api/auth/login")
+            .bodyValue(AuthRequest.builder().username("admin").password("admin").build())
             .exchange()
             .expectBody(String.class)
             .returnResult()

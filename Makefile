@@ -28,7 +28,7 @@ run-app:
 
 fill-tables:
 	@chmod +x ./scripts/fill-tables
-	@./scripts/fill-tables
+	@echo "Please enter your API key:" && read API_KEY && ./scripts/fill-tables $$API_KEY
 
 clean-port:
 	@echo "Cleaning port 8080..."

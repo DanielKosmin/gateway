@@ -1,7 +1,6 @@
 package com.kosmin.unit.test;
 
 import com.kosmin.config.SqlQueriesConfig;
-import com.kosmin.config.TableInsertConfig;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,6 @@ import org.springframework.core.io.Resource;
 public abstract class BaseUnitTest {
 
   protected SqlQueriesConfig sqlQueriesConfig;
-  protected TableInsertConfig tableInsertConfig;
   protected static final String INSERT_CHECKING_RECORDS = "insert-checking-records";
   protected static final String INSERT_INTO_CREDIT_TABLE = "insert-credit-records";
   protected static final String CLEAR_CHECKING_RECORDS = "clear-checking-records";
@@ -34,8 +32,6 @@ public abstract class BaseUnitTest {
     String dropCheckingQuery = properties.getProperty("queries.map." + DROP_CHECKING_RECORDS);
     String clearCreditQuery = properties.getProperty("queries.map." + CLEAR_CREDIT_RECORDS);
     String dropCreditQuery = properties.getProperty("queries.map." + DROP_CREDIT_RECORDS);
-    String checkingCreationQuery = properties.getProperty("tables." + CREATE_CHECKING_TABLE);
-    String creditCreationQuery = properties.getProperty("tables." + CREATE_CREDIT_TABLE);
 
     sqlQueriesConfig =
         new SqlQueriesConfig(
@@ -46,7 +42,6 @@ public abstract class BaseUnitTest {
                 DROP_CHECKING_RECORDS, dropCheckingQuery,
                 CLEAR_CREDIT_RECORDS, clearCreditQuery,
                 DROP_CREDIT_RECORDS, dropCreditQuery));
-    tableInsertConfig = new TableInsertConfig(checkingCreationQuery, creditCreationQuery);
   }
 
   private Properties loadYamlProperties() {

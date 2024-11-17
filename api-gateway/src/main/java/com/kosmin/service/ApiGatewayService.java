@@ -12,10 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ApiGatewayService {
   private final DataRelationService dataRelationService;
 
-  public ResponseEntity<Response> createTables() {
-    return dataRelationService.createTables();
-  }
-
   public ResponseEntity<Response> insertRecords(Request request) {
     return dataRelationService.insertTableRecords(null, request);
   }
