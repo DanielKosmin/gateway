@@ -1,6 +1,7 @@
 ### POST insert credit records
 POST {{GATEWAY_BASE_URL}}/gateway/v1
 Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer {{TOKEN_VALUE}}
 
 --boundary
 Content-Disposition: form-data; name="file"; filename="credit_records.csv"

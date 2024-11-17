@@ -83,6 +83,7 @@ public class SyncIntegrationTest extends BaseIntegrationTest {
     return webTestClient
         .post()
         .uri(BaseIntegrationTest.POST_URL)
+        .header("Authorization", "Bearer " + TOKEN)
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(body)
         .exchange()
