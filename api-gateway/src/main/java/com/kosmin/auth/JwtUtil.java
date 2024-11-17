@@ -2,7 +2,6 @@ package com.kosmin.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import java.util.Date;
@@ -31,13 +30,9 @@ public class JwtUtil {
   }
 
   public boolean validateToken(String token, String username) {
-    try {
-      JWTVerifier verifier = JWT.require(getAlgorithm()).withSubject(username).build();
-      verifier.verify(token);
-      return true;
-    } catch (JWTVerificationException e) {
-      return false;
-    }
+    JWTVerifier verifier = JWT.require(getAlgorithm()).withSubject(username).build();
+    verifier.verify(token);
+    return true;
   }
 
   private DecodedJWT decodeToken(String token) {
