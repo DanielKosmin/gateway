@@ -10,7 +10,6 @@ import static com.kosmin.util.ResponseEntityUtil.partiallyCompletedResponse;
 import com.kosmin.exception.InvalidQueryParamException;
 import com.kosmin.model.Request;
 import com.kosmin.model.Response;
-import com.kosmin.repository.create.CreateTables;
 import com.kosmin.repository.delete.DeleteTableRows;
 import com.kosmin.repository.insert.InsertCheckingRecords;
 import com.kosmin.repository.insert.InsertCreditRecords;
@@ -29,15 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class DataRelationService {
 
   private final AsyncCsvProcessingService asyncCsvProcessingService;
-  private final CreateTables createTables;
   private final DeleteTableRows deleteTableRows;
   private final InsertCheckingRecords insertCheckingRecords;
   private final InsertCreditRecords insertCreditRecords;
-
-  public ResponseEntity<Response> createTables() {
-    createTables.createTables();
-    return createdResponse("Tables(s) Created Successfully");
-  }
 
   public ResponseEntity<Response> insertTableRecords(MultipartFile file, Request request) {
     if (file != null && isValidCsvFile(file)) {

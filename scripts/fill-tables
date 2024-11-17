@@ -1,25 +1,20 @@
 #!/bin/sh
 
 DATA_RELATION_BASE_URL=http://localhost:8080
+API_KEY=$1
 
 sleep 5
 
 echo "Generating auth token..."
-TOKEN=$(curl -s -X POST "$DATA_RELATION_BASE_URL/api/auth/login?username=admin&password=admin")
-
-echo "Dropping Existing Tables..."
-DELETE_RES=$(curl -s -w "%{http_code}" -o /dev/null -X DELETE "$DATA_RELATION_BASE_URL/gateway/v1?credit=true&checking=true&dropTables=true" \
-                -H "Authorization: Bearer $TOKEN")
-echo "Response Code: $DELETE_RES"
-
-echo "Creating New Tables..."
-CREATE_RES=$(curl -s -w "%{http_code}" -o /dev/null -X POST "$DATA_RELATION_BASE_URL/gateway/v1" \
-                -H "Authorization: Bearer $TOKEN")
-echo "Response Code: $CREATE_RES"
+TOKEN=$(curl -s -X POST "$DATA_RELATION_BASE_URL/api/auth/login" \
+                -H "Content-Type: application/json" \
+                -d '{"username": "admin", "password": "admin"}')
 
 echo "Uploading Checking Data..."
 CHECKING_RES=$(curl -s -w "%{http_code}" -o /dev/null -X POST "$DATA_RELATION_BASE_URL/gateway/v1" \
                 -H "Authorization: Bearer $TOKEN" \
+                -H "x-api-key: $API_KEY" \
+                -H "Content-Type: multipart/form-data" \
                 -F "file=@api-calls/insert/checking_records.csv")
 echo "Response Code: $CHECKING_RES"
 
@@ -29,6 +24,8 @@ sleep 2
 echo "Uploading Credit Data..."
 CREDIT_RES=$(curl -s -w "%{http_code}" -o /dev/null -X POST "$DATA_RELATION_BASE_URL/gateway/v1" \
                 -H "Authorization: Bearer $TOKEN" \
+                -H "x-api-key: $API_KEY" \
+                -H "Content-Type: multipart/form-data" \
                 -F "file=@api-calls/insert/credit_records.csv")
 echo "Response Code: $CREDIT_RES"
 

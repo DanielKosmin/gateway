@@ -1,7 +1,8 @@
 ### POST generate auth token
-< {%
-    request.variables.set("USERNAME", "");
-    request.variables.set("PASSWORD", "")
-%}
-POST {{GATEWAY_BASE_URL}}/api/auth/login?username={{USERNAME}}&password={{PASSWORD}}
-Content-Type: application/x-www-form-urlencoded
+POST {{GATEWAY_BASE_URL}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}

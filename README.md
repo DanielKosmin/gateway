@@ -40,6 +40,20 @@ spring:
 make init
 ```
 
+- create a file called `http-client.private.env.json` in [api calls](api-calls) directory with the following content
+
+```bash
+{
+  "local": {
+    "GATEWAY_BASE_URL": "localhost:8080",
+    "TOKEN_VALUE": "<token value>",
+    "API_KEY": "<make update-jwt-key>"
+  }
+}
+```
+
+- to get the token value, run the project locally and call
+  the [token generation api](api-calls/auth/generate-token.http) and use this token for the `TOKEN_VALUE` above
 - you can then run the project locally and test the [api calls](api-calls)
 - to tear down the environment run the following command
 
