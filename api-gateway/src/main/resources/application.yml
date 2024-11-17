@@ -1,5 +1,6 @@
 spring:
   auth:
+    skip: false
     jwt:
       key: ${JWT_SECRET}
   config:
