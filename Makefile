@@ -1,6 +1,5 @@
 .PHONY: init update-jwt-key start-database kill-existing-port run-app fill-tables clean-port clean
 
-DATA_RELATION_BASE_URL ?= http://localhost:8080
 YML_FILE ?= api-gateway/src/main/resources/application-local.yml
 
 init: start-database kill-existing-port run-app fill-tables clean-port
@@ -28,30 +27,8 @@ run-app:
 	@./gradlew clean bootRun > /dev/null 2>&1 &
 
 fill-tables:
-	@sleep 5
-	@echo "Generating auth token..."
-	@TOKEN=$$(curl -s -X POST "$(DATA_RELATION_BASE_URL)/api/auth/login?username=admin&password=admin"); \
-	echo "Dropping Existing Tables..."; \
-	DELETE_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X DELETE "$(DATA_RELATION_BASE_URL)/gateway/v1?credit=true&checking=true&dropTables=true" \
-					-H "Authorization: Bearer $$TOKEN"); \
-	echo "Response Code: $$DELETE_RES"; \
-	echo "Creating New Tables..."; \
-	CREATE_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X POST "$(DATA_RELATION_BASE_URL)/gateway/v1" \
-               		-H "Authorization: Bearer $$TOKEN"); \
-    echo "Response Code: $$CREATE_RES"; \
-    echo "Uploading Checking Data..."; \
-    CHECKING_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X POST "$(DATA_RELATION_BASE_URL)/gateway/v1" \
-					-H "Authorization: Bearer $$TOKEN" \
-					-F "file=@api-calls/insert/checking_records.csv"); \
-	echo "Response Code: $$CHECKING_RES"; \
-	echo "Adding pause to allow async call to complete..."; \
-	sleep 2; \
-	echo "Uploading Credit Data..."; \
-	CREDIT_RES=$$(curl -s -w "%{http_code}" -o /dev/null -X POST "$(DATA_RELATION_BASE_URL)/gateway/v1" \
-					-H "Authorization: Bearer $$TOKEN" \
-					-F "file=@api-calls/insert/credit_records.csv"); \
-	echo "Response Code: $$CREDIT_RES"; \
-	echo "Data population complete. Shutting down the application..."
+	@chmod +x ./scripts/fill-tables
+	@./scripts/fill-tables
 
 clean-port:
 	@echo "Cleaning port 8080..."
